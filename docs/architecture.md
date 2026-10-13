@@ -1,108 +1,134 @@
-# RoomOps — Technical Architecture
+# RoomOps — Arquitectura Técnica
 
-## 1. Overview
+## 1. Descripción general
 
-RoomOps is a web platform for managing the daily operations of escape-room businesses.
+RoomOps es una plataforma web para gestionar las operaciones diarias de empresas dedicadas a los juegos de escape.
 
-The system centralizes room management, customers, reservations, payments, expenses, and operational reporting.
+El sistema centraliza la gestión de salas, clientes, reservas, pagos, gastos y herramientas de operación.
 
-The architecture separates the user interfaces, business logic, and data persistence to improve maintainability, testability, and future extensibility.
+La arquitectura separa las interfaces de usuario, la lógica de negocio y la persistencia de datos para favorecer el mantenimiento, las pruebas y la posibilidad de ampliar el sistema en el futuro.
 
-## 2. Technology Stack
-
-### Frontend
-- **React** — UI library for building the web interfaces.
-- **TypeScript** — Adds static typing to JavaScript.
-
-### Backend
-- **Java 21** — Backend programming language and runtime.
-- **Spring Boot** — Framework for building the backend application and REST API.
-
-### Database
-- **PostgreSQL** — Relational database for persistent application data.
-
-### Development and Version Control
-- **Git** — Version control.
-- **GitHub** — Remote repository and collaboration platform.
-- **Docker** — Reproducible development environment and service execution.
-
-## 3. High-Level Architecture
-
-RoomOps follows a client-server architecture.
-
-The main components are:
-
-1. **Public Booking Website:** A customer-facing interface where customers can view rooms, availability, and make reservations.
-2. **Internal Management Panel:** An interface used by administrators and operators to manage daily business operations.
-3. **Backend API:** A Spring Boot application that exposes endpoints, applies business rules, validates operations, and controls access.
-4. **PostgreSQL Database:** Stores application data and enforces relational integrity.
-
-Both interfaces can communicate with the same backend API. They do not access the database directly.
-
-## 4. Responsibilities
+## 2. Tecnologías
 
 ### Frontend
-- Render the user interfaces.
-- Collect and validate user input for usability.
-- Display data received from the backend.
-- Send requests to the backend API.
-
-The backend remains responsible for enforcing business rules and security.
+- **React:** biblioteca para construir las interfaces de usuario.
+- **TypeScript:** lenguaje que incorpora tipado estático a JavaScript.
 
 ### Backend
-- Authenticate users and authorize actions according to their roles.
-- Manage rooms, customers, reservations, payments, and expenses.
-- Enforce business rules and validate operations.
-- Expose REST API endpoints.
-- Coordinate database operations.
+- **Java 21:** lenguaje y entorno de ejecución del backend.
+- **Spring Boot:** framework para desarrollar la aplicación backend y su API REST.
 
-### Database
-- Persist application data.
-- Enforce primary keys, foreign keys, uniqueness, and other applicable constraints.
-- Maintain relationships between entities.
+### Base de datos
+- **PostgreSQL:** sistema de gestión de bases de datos relacionales utilizado para almacenar los datos de la aplicación.
 
-## 5. Architectural Principles
+### Desarrollo y control de versiones
+- **Git:** herramienta de control de versiones.
+- **GitHub:** alojamiento remoto del repositorio y seguimiento de los cambios.
+- **Docker:** herramienta para ejecutar servicios en entornos reproducibles.
 
-- Separate presentation, business logic, and persistence.
-- Keep business rules in the backend rather than relying on frontend validation.
-- Use a relational data model with explicit constraints.
-- Store monetary values using appropriate decimal types, not floating-point types.
-- Preserve reservation history, including the agreed price at the time of booking.
-- Keep the system independent of any specific escape-room business.
-- Prefer a modular, maintainable design over unnecessary complexity.
+## 3. Arquitectura general
 
-## 6. Initial Scope
+RoomOps utiliza una arquitectura cliente-servidor.
 
-The first version will include:
+El sistema contempla los siguientes componentes:
 
-- Authentication and role-based access.
-- Room and pricing management.
-- Customer management.
-- Reservation management.
-- Payment registration.
-- Expense registration.
-- Dashboard and operational reservation grid.
+1. **Sitio web público de reservas:** interfaz destinada a los clientes, donde pueden consultar salas, disponibilidad y realizar reservas.
+2. **Panel interno de gestión:** interfaz utilizada por administradores y operadores para gestionar las operaciones diarias de la empresa.
+3. **API backend:** aplicación desarrollada con Spring Boot que expone endpoints, aplica las reglas de negocio, valida las operaciones y controla los accesos.
+4. **Base de datos PostgreSQL:** almacena la información persistente del sistema.
 
-Real payment processing, electronic invoicing, WhatsApp integration, and external booking-platform integrations are outside the initial scope.
+Las interfaces pueden comunicarse con el mismo backend mediante una API. Ninguna de ellas accede directamente a la base de datos.
 
-## 7. Development Approach
+## 4. Responsabilidades de cada componente
 
-Development will proceed incrementally:
+### Frontend
 
-1. Requirements and conceptual data modeling.
-2. Technical architecture and physical database design.
-3. Backend implementation and automated testing.
-4. Frontend implementation and API integration.
-5. End-to-end testing.
-6. Deployment and documentation.
+- Mostrar las interfaces de usuario.
+- Recopilar los datos ingresados y realizar validaciones orientadas a la usabilidad.
+- Mostrar la información recibida del backend.
+- Enviar solicitudes a la API.
+- Presentar los horarios y las opciones de reserva disponibles según la información proporcionada por la integración correspondiente.
 
-Each significant change will be versioned using Git and pushed to GitHub.
+El frontend no será responsable de garantizar por sí solo el cumplimiento de las reglas de negocio ni de la seguridad.
 
-## 8. Current Status
+### Backend
 
-- Requirements documented.
-- Conceptual ERD created.
-- Technology stack selected.
-- Technical architecture documented.
+- Autenticar usuarios y autorizar acciones según sus roles.
+- Gestionar salas, clientes, reservas, pagos y gastos.
+- Aplicar las reglas de negocio y validar las operaciones.
+- Exponer endpoints mediante una API REST.
+- Coordinar las operaciones sobre la base de datos.
+- Integrar RoomOps con plataformas externas de reservas cuando corresponda.
 
-The next step is to define the physical PostgreSQL schema and prepare the database implementation.
+### Base de datos
+
+- Persistir los datos de la aplicación.
+- Garantizar la integridad referencial mediante claves primarias y foráneas.
+- Aplicar restricciones de unicidad y validaciones compatibles con la base de datos.
+- Mantener las relaciones entre las entidades.
+
+### Integraciones externas
+
+RoomOps podrá comunicarse con plataformas de reservas existentes para consultar disponibilidad y gestionar operaciones compatibles con las API que dichas plataformas ofrezcan.
+
+La integración deberá adaptarse a las capacidades y limitaciones de cada proveedor.
+
+La plataforma externa será responsable de determinar la disponibilidad real cuando así se establezca para esa integración. RoomOps no deberá asumir que puede crear o modificar reservas sin validar la operación mediante el mecanismo disponible.
+
+## 5. Principios de arquitectura
+
+- Separar la presentación, la lógica de negocio y la persistencia.
+- Mantener las reglas de negocio en el backend y no depender exclusivamente de las validaciones del frontend.
+- Utilizar un modelo relacional con restricciones explícitas.
+- Almacenar los importes monetarios mediante tipos decimales exactos, evitando los tipos de punto flotante.
+- Conservar el precio acordado de una reserva como dato histórico.
+- Mantener RoomOps independiente de una empresa específica.
+- Evitar complejidad innecesaria y priorizar un diseño modular y mantenible.
+- Aislar las integraciones externas para evitar que las particularidades de un proveedor condicionen todo el sistema.
+
+## 6. Alcance inicial
+
+La primera versión de RoomOps incluirá:
+
+- Autenticación y control de acceso por roles.
+- Gestión de usuarios.
+- Gestión de salas y precios.
+- Gestión de clientes.
+- Gestión de reservas.
+- Registro de pagos.
+- Registro de gastos.
+- Dashboard operativo.
+- Grilla de reservas.
+
+Quedan fuera del alcance inicial:
+
+- Procesamiento real de pagos.
+- Integración con Mercado Pago para cobrar.
+- Facturación electrónica.
+- Integración con WhatsApp.
+- Integraciones con plataformas externas de reservas, hasta definir y validar cada conector.
+- Aplicación móvil.
+- Políticas automáticas de devolución.
+
+## 7. Enfoque de desarrollo
+
+El desarrollo se realizará de manera incremental:
+
+1. Definición de requisitos y modelado conceptual de datos.
+2. Diseño de la arquitectura técnica y del esquema físico de la base de datos.
+3. Implementación del backend y pruebas automatizadas.
+4. Implementación del frontend e integración con la API.
+5. Pruebas de integración y de extremo a extremo.
+6. Preparación del despliegue y documentación final.
+
+Los cambios significativos se registrarán mediante Git y se publicarán en GitHub.
+
+## 8. Estado actual
+
+- Requisitos funcionales documentados.
+- Diagrama Entidad-Relación conceptual creado.
+- Stack tecnológico seleccionado.
+- Arquitectura técnica documentada.
+- Diseño físico de la base de datos en elaboración.
+
+El siguiente paso es completar el diseño físico de PostgreSQL y preparar su implementación.

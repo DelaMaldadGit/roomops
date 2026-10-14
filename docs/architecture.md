@@ -47,7 +47,7 @@ Las interfaces pueden comunicarse con el mismo backend mediante una API. Ninguna
 - Recopilar los datos ingresados y realizar validaciones orientadas a la usabilidad.
 - Mostrar la información recibida del backend.
 - Enviar solicitudes a la API.
-- Presentar los horarios y las opciones de reserva disponibles según la información proporcionada por la integración correspondiente.
+- Presentar los horarios y las opciones de reserva disponibles según la información de disponibilidad calculada por RoomOps.
 
 El frontend no será responsable de garantizar por sí solo el cumplimiento de las reglas de negocio ni de la seguridad.
 

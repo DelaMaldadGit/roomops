@@ -137,9 +137,6 @@ Las claves foráneas deben impedir referencias a registros inexistentes. Las eli
 CREATE UNIQUE INDEX uq_users_email_lower
     ON users (LOWER(email));
 
-CREATE UNIQUE INDEX uq_room_prices_room_players
-    ON room_prices (room_id, players);
-
 CREATE INDEX ix_reservations_room_start
     ON reservations (room_id, start_datetime);
 
@@ -165,6 +162,14 @@ El backend deberá coordinar mediante transacciones las operaciones que afecten 
 - Validar conflictos de horario al crear o modificar reservas.
 
 La prevención de conflictos debe contemplar solicitudes simultáneas; una consulta previa sin protección transaccional no es suficiente.
+
+Para crear o modificar una reserva, el backend deberá serializar las operaciones de disponibilidad de una misma sala mediante un bloqueo transaccional de la fila de la sala o un mecanismo equivalente.
+
+Dentro de la transacción deberá validar el estado de la sala, la capacidad y los intervalos horarios de las reservas confirmadas, y guardar la operación únicamente si no existe un conflicto.
+
+El intervalo ocupado se calculará a partir de `start_datetime` y `rooms.duration_minutes`. Las reservas canceladas no bloquearán horarios.
+
+La transacción deberá impedir que dos solicitudes concurrentes confirmen reservas incompatibles para la misma sala.
 
 ## 7. Seguridad
 

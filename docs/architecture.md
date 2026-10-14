@@ -69,11 +69,13 @@ El frontend no será responsable de garantizar por sí solo el cumplimiento de l
 
 ### Integraciones externas
 
-RoomOps podrá comunicarse con plataformas de reservas existentes para consultar disponibilidad y gestionar operaciones compatibles con las API que dichas plataformas ofrezcan.
+La arquitectura permitirá incorporar integraciones con plataformas externas de reservas, como Booknetic, en versiones futuras.
 
-La integración deberá adaptarse a las capacidades y limitaciones de cada proveedor.
+La V1 no incluirá conectores externos ni sincronización automática de disponibilidad, creación, modificación o cancelación de reservas.
 
-La plataforma externa será responsable de determinar la disponibilidad real cuando así se establezca para esa integración. RoomOps no deberá asumir que puede crear o modificar reservas sin validar la operación mediante el mecanismo disponible.
+Durante V1, RoomOps gestionará la disponibilidad a partir de las reservas registradas en su propia base de datos. Las reservas realizadas en plataformas externas no se reflejarán automáticamente en RoomOps.
+
+Las futuras integraciones deberán aislarse en componentes específicos y respetar las capacidades, limitaciones y mecanismos de validación del proveedor correspondiente.
 
 ## 5. Principios de arquitectura
 
@@ -85,6 +87,7 @@ La plataforma externa será responsable de determinar la disponibilidad real cua
 - Mantener RoomOps independiente de una empresa específica.
 - Evitar complejidad innecesaria y priorizar un diseño modular y mantenible.
 - Aislar las integraciones externas para evitar que las particularidades de un proveedor condicionen todo el sistema.
+- La disponibilidad de V1 se calculará con las reservas registradas en RoomOps; no se asumirá que representa la disponibilidad de sistemas externos no integrados.
 
 ## 6. Alcance inicial
 
@@ -103,10 +106,11 @@ La primera versión de RoomOps incluirá:
 Quedan fuera del alcance inicial:
 
 - Procesamiento real de pagos.
-- Integración con Mercado Pago para cobrar.
+- Integración con Mercado Pago para procesar cobros.
 - Facturación electrónica.
 - Integración con WhatsApp.
-- Integraciones con plataformas externas de reservas, hasta definir y validar cada conector.
+- Integraciones con plataformas externas de reservas, incluida Booknetic.
+- Sincronización automática de reservas y disponibilidad con sistemas externos.
 - Aplicación móvil.
 - Políticas automáticas de devolución.
 

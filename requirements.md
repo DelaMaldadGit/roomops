@@ -63,12 +63,17 @@ El operador no podrá gestionar usuarios.
 
 Cada usuario deberá contar con:
 
-* Nombre de usuario o email.
-* Contraseña.
-* Rol.
-* Estado activo/inactivo.
+- Nombre visible.
+- Email para iniciar sesión.
+- Contraseña almacenada de forma segura mediante un hash.
+- Rol.
+- Estado activo/inactivo.
+
+El email será el identificador de inicio de sesión y deberá ser único, sin distinguir entre mayúsculas y minúsculas.
 
 Los usuarios inactivos no podrán iniciar sesión.
+
+Los roles de V1 serán `ADMIN` y `OPERATOR`.
 
 ---
 
@@ -100,12 +105,9 @@ La dificultad tendrá los siguientes valores:
 * DIFÍCIL
 * EXPERTO
 
-La duración estándar de V1 será:
+La duración de cada experiencia se configurará en minutos mediante el atributo correspondiente de la sala. La duración estándar podrá ser de 60 minutos, pero no se asumirá que todas las salas deban tener la misma duración.
 
-* 60 minutos de juego.
-* 30 minutos de intervalo operativo entre turnos.
-
-El modelo deberá permitir soportar diferentes duraciones e intervalos en el futuro.
+En V1 no se configurará un intervalo de preparación independiente por sala. La lógica de disponibilidad de RoomOps deberá basarse en la duración de la experiencia y en las reservas registradas en RoomOps.
 
 Una sala inactiva conservará su historial, pero no podrá recibir nuevas reservas.
 
@@ -142,7 +144,8 @@ Cada cliente deberá contar con:
 * Nombre.
 * Apellido.
 * Teléfono obligatorio.
-* Email opcional.
+* Email obligatorio.
+* El email no deberá ser único: distintos registros de clientes podrán compartir una misma dirección de correo.
 
 Un mismo cliente podrá tener múltiples reservas, incluso varias reservas o salas durante el mismo día.
 
@@ -172,36 +175,36 @@ Cada reserva deberá registrar:
 * Estado.
 * Notas.
 
-Los estados serán:
+Una nueva reserva solo podrá quedar en estado `CONFIRMED` cuando RoomOps haya validado las reglas de disponibilidad de su propio sistema y guardado correctamente la operación.
 
-* CONFIRMED
-* COMPLETED
-* CANCELLED
-
-Una nueva reserva comenzará en estado `CONFIRMED`.
+Los estados permitidos serán `CONFIRMED`, `COMPLETED` y `CANCELLED`.
 
 Las transiciones permitidas serán:
 
-```text
+```
 CONFIRMED → COMPLETED
 CONFIRMED → CANCELLED
 ```
 
-Una reserva cancelada liberará el horario correspondiente.
-
-Una reserva cancelada no podrá volver a confirmarse. Si el cliente desea realizar otra reserva, deberá crearse una nueva.
+Una reserva cancelada liberará el horario en RoomOps, conservará su historial y no podrá volver a confirmarse. Si se necesita otra reserva, deberá crearse un nuevo registro.
 
 ---
 
 ### 4.6 Disponibilidad
 
+RoomOps deberá validar la disponibilidad utilizando las reservas registradas en su propia base de datos.
+
 El sistema deberá garantizar que:
 
-* No existan reservas confirmadas superpuestas para una misma sala.
-* Una reserva confirmada ocupe el horario correspondiente.
-* Una reserva cancelada no bloquee el horario.
-* La cantidad de jugadores no supere la capacidad máxima de la sala.
-* Una sala inactiva no pueda recibir nuevas reservas.
+- No existan reservas confirmadas superpuestas para una misma sala dentro de RoomOps.
+- Una reserva confirmada ocupe el horario correspondiente según la duración configurada para la sala.
+- Una reserva cancelada no bloquee el horario.
+- La cantidad de jugadores no supere la capacidad máxima de la sala.
+- Una sala inactiva no pueda recibir nuevas reservas.
+
+La validación deberá contemplar las operaciones simultáneas para impedir que dos solicitudes confirmen reservas superpuestas.
+
+En V1 no existirá sincronización automática con Booknetic ni con otras plataformas externas. Las reservas creadas fuera de RoomOps no se reflejarán automáticamente en su disponibilidad. Por lo tanto, RoomOps no podrá garantizar que un horario esté libre en Booknetic si ese dato no se registra manualmente en RoomOps.
 
 Las excepciones de capacidad quedan fuera del alcance de V1.
 
@@ -375,6 +378,7 @@ La primera versión de RoomOps incluirá:
 * Gastos.
 * Dashboard.
 * Grilla operativa de reservas.
+* Gestión de reservas y disponibilidad interna de RoomOps, sin sincronización con plataformas externas.
 
 ---
 
@@ -388,11 +392,11 @@ Las siguientes funcionalidades no serán implementadas inicialmente:
 * Facturación electrónica.
 * Integración con AFIP.
 * Aplicación móvil.
-* Integración con Booknetic u otros sistemas externos.
 * Reembolsos automáticos.
 * Excepciones de capacidad.
 * Sistema avanzado de precios.
 * Configuración avanzada de duración por sala.
+* Integración con Booknetic u otras plataformas externas de reservas, incluyendo consulta de disponibilidad, creación, modificación, cancelación y sincronización automática de reservas.
 
 ---
 

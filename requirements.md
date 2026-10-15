@@ -100,10 +100,10 @@ Cada sala deberá contar con:
 
 La dificultad tendrá los siguientes valores:
 
-* FÁCIL
-* INTERMEDIO
-* DIFÍCIL
-* EXPERTO
+* EASY
+* MEDIUM
+* HARD
+* EXPERT
 
 La duración de cada experiencia se configurará en minutos mediante el atributo correspondiente de la sala. La duración estándar podrá ser de 60 minutos, pero no se asumirá que todas las salas deban tener la misma duración.
 
@@ -245,7 +245,7 @@ Cada pago deberá registrar:
 
 Los medios de pago de V1 serán:
 
-* EFECTIVO
+* CASH
 * MERCADO_PAGO
 
 RoomOps no procesará pagos reales. El sistema únicamente registrará pagos realizados externamente.
@@ -395,7 +395,7 @@ Las siguientes funcionalidades no serán implementadas inicialmente:
 * Reembolsos automáticos.
 * Excepciones de capacidad.
 * Sistema avanzado de precios.
-* Configuración avanzada de duración por sala.
+* Reglas avanzadas de duración e intervalos de preparación de salas
 * Integración con Booknetic u otras plataformas externas de reservas, incluyendo consulta de disponibilidad, creación, modificación, cancelación y sincronización automática de reservas.
 
 ---

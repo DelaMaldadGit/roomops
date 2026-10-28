@@ -30,7 +30,7 @@ Las reglas que dependen de varios registros deben validarse desde el backend med
 | `role` | `VARCHAR(20)` | NOT NULL, `ADMIN` u `OPERATOR` |
 | `active` | `BOOLEAN` | NOT NULL, DEFAULT TRUE |
 
-El email será el identificador de inicio de sesión y será único sin distinguir entre mayúsculas y minúsculas. El backend deberá normalizarlo. Las contraseñas se almacenarán como hashes seguros, nunca en texto plano. Los usuarios inactivos no podrán iniciar sesión.
+El email será el identificador de inicio de sesión y será único sin distinguir entre mayúsculas y minúsculas, además será obligatorio y no puede estar vacío. El backend deberá normalizarlo. Las contraseñas se almacenarán como hashes seguros, nunca en texto plano. Los usuarios inactivos no podrán iniciar sesión.
 
 ### 3.2. `rooms`
 
@@ -41,7 +41,7 @@ El email será el identificador de inicio de sesión y será único sin distingu
 | `description` | `TEXT` | NULL permitido |
 | `theme` | `VARCHAR(80)` | NOT NULL, no vacío |
 | `difficulty` | `VARCHAR(20)` | NOT NULL, `EASY`, `MEDIUM`, `HARD` o `EXPERT` |
-| `min_capacity` | `INTEGER` | NOT NULL, mayor o igual que 1 |
+| `min_capacity` | `INTEGER` | NOT NULL, mayor o igual que 2 |
 | `max_capacity` | `INTEGER` | NOT NULL, mayor o igual que `min_capacity` |
 | `duration_minutes` | `INTEGER` | NOT NULL, mayor que 0 |
 | `status` | `VARCHAR(20)` | NOT NULL, DEFAULT `ACTIVE`; `ACTIVE` o `INACTIVE` |
@@ -71,7 +71,7 @@ Los cambios en esta tabla no modificarán el precio histórico de reservas exist
 | `phone` | `VARCHAR(30)` | NOT NULL, no vacío |
 | `email` | `VARCHAR(254)` | NOT NULL |
 
-El email es obligatorio, pero no único. El teléfono se almacena como texto para conservar prefijos, signos y ceros iniciales. No se deben eliminar físicamente clientes que tengan reservas asociadas.
+El email es obligatorio, y no único. El teléfono se almacena como texto para conservar prefijos, signos y ceros iniciales. No se deben eliminar físicamente clientes que tengan reservas asociadas.
 
 ### 3.5. `reservations`
 
